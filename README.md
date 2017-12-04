@@ -5,3 +5,6 @@ The baseloads are imported from a csv-file into a pandas dataframe. The head of 
 The code is written to be executed in Jupyter Notebook.
 The new csv-file is designed to work together with PyPSA for powerflow calculations. Therefore the unit is MW!
 https://github.com/PyPSA/PyPSA
+
+The folder literature contains some references to the calculations made by the loadshape generator.
+"Kapitel 5: Lastprofilgenerator.pdf" contains a detailled explanation of the loadshape generator, but it is in German for now. 
