@@ -62,6 +62,7 @@ heatpump_type = "Air"
 #heatpump_type = "Ground"
 
 heatpump_power_lst = [10.6, 14.5, 18.5] #kW
+thermal_power = True #is heatpump_power_lst above electrical (False) or thermal (True) power?
 #Hours of usage per year. According to BDEW multi family homes: 2000, single family homes: 2100
 hours_year = 2000
 water_temp = 60 #°C
@@ -528,15 +529,22 @@ if len(houses_with_hp) > 0:
 
             dfcop = pd.DataFrame(cop_lst)
             df_heatpump['COP'] = dfcop[0]
-            
-            #seasonal performance factor (Jahresarbeitszahl) spf
-            spf = sum(df_heatpump.COP)/len(df_heatpump.COP)
-            
-            #Demandfactor (Verbrauchswert) Q_N 
-            Q_N = heatpump_power * spf * hours_year
+                        
+            if thermal_power:
+                #Demandfactor (Verbrauchswert) Q_N 
+                Q_N = heatpump_power * hours_year #if heatpump_power is thermal power
+
+            else:
+                
+                #seasonal performance factor (Jahresarbeitszahl) spf
+                #needed if only el. power of heatpump is known 
+                spf = sum(df_heatpump.COP)/len(df_heatpump.COP)
+
+                #Demandfactor (Verbrauchswert) Q_N 
+                Q_N = heatpump_power * spf * hours_year #if heatpump_power is el. power
             
             #Consumerfactor (Kundenwert) K_w
-            K_w = Q_N/(sum(df_HP.h_del))  
+            K_w = Q_N/(sum(df_HP.h_del))
             
             df2 = pd.DataFrame(demand_daily_lst)
             df2 = df2 * K_w
